@@ -1,0 +1,90 @@
+## PREREQUISITES
+
+[node.js](https://nodejs.org/download/) should be set up with [Nodeenv](http://ekalinin.github.io/nodeenv/) before you start
+```
+sudo apt-get -y install python-pip
+pip install --upgrade virtualenv
+virtualenv $HOME/.venv/agprox
+source $HOME/.venv/agprox/bin/activate
+pip install --upgrade pip
+pip install --upgrade setuptools
+pip install --upgrade nodeenv
+nodeenv $HOME/.nenv/agprox                  # installs current version of node.js into nodeenv
+# nodeenv --node=0.12.2 $HOME/.nenv/agprox  # installs specified version on node.js
+source $HOME/.nenv/agprox/bin/activate
+```
+
+[Ruby](https://rvm.io/rvm/install) and [compass](https://rubygems.org/gems/compass) need to be installed
+```shell
+command curl -sSL https://rvm.io/mpapis.asc | gpg --import -
+\curl -sSL https://get.rvm.io | bash -s stable --without-gems="rvm rubygems-bundler"
+rvm install ruby                            # needs user with sudo
+source "$HOME/.rvm/scripts/rvm"
+gem update --system
+gem install compass
+```
+
+Use npm to install requirements
+```shell
+npm install -g grunt-cli
+npm install -g bower
+npm install
+```
+
+
+## USAGE
+
+Activate NodeEnv:
+```shell
+source $HOME/.venv/agprox/bin/activate
+source $HOME/.nenv/agprox/bin/activate
+```
+
+Run bower package manager:
+```
+[[ -d app/bower_components ]] && rm -rf app/bower_components   # for clean run
+bower update
+```
+
+To run server with app:
+```shell
+grunt server
+grunt server:intdev
+grunt server:intdevmin
+grunt server:qa
+grunt server:prod
+grunt server:agx
+```
+
+To build dist directory:
+```shell
+[[ -d dist ]] && rm -rf dist   # for clean build
+grunt build
+```
+
+
+## ADDING NEW BACKBONE ELEMENTS
+
+Please see options list on generator-backbone github
+
+## TEST
+
+TBD
+
+
+## DEPLOYMENT
+
+* Artifacts to copy: ```dist/**/*```
+
+* Run script on destination server:
+```
+AGPROX_HOME=/home/agprox
+AGPROX_FE_ROOT=$AGPROX_HOME/app/agprox_frontend
+mkdir -pv $AGPROX_FE_ROOT
+rm -rf $AGPROX_FE_ROOT/*
+```
+
+* Send files over SSH:
+  - Source files: ```dist/**/*```
+  - Remove prefix: ```dist```
+  - Remote directory: ```/home/agprox/app/agprox_frontend```
