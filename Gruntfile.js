@@ -29,42 +29,11 @@
         require('time-grunt')(grunt);
         // load all grunt tasks
         require('load-grunt-tasks')(grunt);
-        grunt.loadNpmTasks('rebase');
+        //grunt.loadNpmTasks('rebase');
         grunt.loadNpmTasks('grunt-karma');
 
         grunt.initConfig({
             yeoman: yeomanConfig,
-            rebase: {
-                scoped: {
-                    files: [{
-                        expand: true,
-                        // work in distination folder after htmlmin plugin
-                        cwd: "<%= yeoman.dist %>/",
-                        src: "*.html",
-                        dest: "<%= yeoman.dist %>/",
-                        // add processed files to references
-                        reference: true,
-                        scopes: {
-                            url: {
-                                "/?images": "/static/images",
-                                "/?font": "/static/styles/fonts"
-                            },
-                            a: {
-                                "/?images": "/static/images"
-                            },
-                            img: {
-                                "/?images": "/static/images"
-                            },
-                            link: {
-                                "/?styles": "/static/styles"
-                            },
-                            script: {
-                                "/?scripts": "/static/scripts"
-                            }
-                        }
-                    }]
-                }
-            },
             watch: {
                 options: {
                     nospawn: true,
@@ -384,7 +353,6 @@
             'copy:dist',
             'rev', // create image name with hash
             'usemin'
-            // 'rebase' // create url with prefix 'static/''
         ]);
 
         grunt.registerTask('default', [
