@@ -1,0 +1,107 @@
+<!doctype html>
+<!--[if lt IE 7]>
+<html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>
+<html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>
+<html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SciON</title>
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300,400,700,900" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+</head>
+<body class="full_height is_login_page">
+<!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
+    your browser</a> to improve your experience.</p>
+<![endif]-->
+
+<header>
+    <div class="tip-container col-lg-6 col-md-6 col-sm-6 col-lg-offset-3 col-md-offset-3 col-sm-offset-3 text-center" id="tip-container"></div>
+    <!-- Main navigation menu bar -->
+    <nav id="mainNavBar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div id="navHdr" class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a href="#" class="logo"><img src="images/scion_logo.png" alt="logo"/></a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul id="navTabs" class="nav navbar-nav" role="tablist">
+                    <li id="navMenu" style="display: none;">
+                        <a href="#" class="navbar-menu">
+                            <i class="icon icon-menu-header"></i>
+                            <span>Menu</span>
+                            <span class="icon icon-caret"></span>
+                        </a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav header-menu" id="navUserHeaderMenu"></ul>
+                <ul class="nav navbar-nav navbar-right login-menu">
+                    <div id="navUser" class="nav navbar-nav"></div>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<section class="container-fluid">
+    <!-- Tab content -->
+    <div id="contentTabs" class="tab-content full_height">
+        <div id="mainTab" class="tab-pane active full_height"></div>
+    </div>
+</section>
+
+<!-- Targets for modal dialogs -->
+<div class="modal fade" id="modal-login"></div>
+<div class="modal fade" id="modal-register"></div>
+
+<script src="//apis.google.com/js/client.js?onload=load"></script>
+<script src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry&region=US&language=en_US"></script>
+
+<!-- build:js scripts/vendor.js -->
+<script src="bower_components/moment/min/moment.min.js"></script>
+<script src="bower_components/jquery/jquery.js"></script>
+<script src="bower_components/underscore/underscore.js"></script>
+<script src="bower_components/backbone/backbone.js"></script>
+<!-- endbuild -->
+
+<!-- build:js scripts/kendo.js -->
+<!-- endbuild -->
+
+<!-- build:js scripts/plugins.js -->
+<!-- endbuild -->
+
+<!-- build:js({.tmp,app}) scripts/main.js -->
+<script src="scripts/app.js"></script>
+<script src="scripts/init.js"></script>
+<script src="scripts/constants.js"></script>
+
+<script src="scripts/templates.js"></script>
+<script src="scripts/router.js"></script>
+<!-- endbuild -->
+
+</body>
+</html>

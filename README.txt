@@ -30,3 +30,26 @@ INSTALLATION
 ============
 
 Please follow the instructions in the file INSTALL.txt in this directory.
+
+
+USAGE
+=====
+
+* Activate virtual environments
+
+    > source $HOME/.venv/scion/bin/activate
+    > source $HOME/.nenv/scion/bin/activate
+
+* Run bower (retrieves requested packages)
+
+    > rm -rf app/bower_components
+    > bower update
+
+* Run application for local development with local backend
+
+    > grunt server
+
+* Build dist directory for deployment
+
+    > rm -rf dist
+    > grunt build
