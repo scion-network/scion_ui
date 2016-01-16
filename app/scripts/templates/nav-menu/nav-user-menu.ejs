@@ -1,0 +1,33 @@
+<% if (is_logged_in) { %>
+
+<li class="dropdown navIcon">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+  <i class="icon icon-bell"></i></a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a data-toggle="modal" data-target="#modal-notifications" href="#">My Notifications <span id="navUserNotifBadge" class="badge"></span></a></li>
+  </ul>
+</li>
+<li id="navUserMain" class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= full_name %> <span id="navUserBadge" class="badge"></span> <span class="caret"></span></a>
+  <ul class="dropdown-menu" role="menu">
+    <li><a href="#" class="change-password" data-toggle="modal" data-target="#modal-change-password">Change password</a></li>
+    <li class="divider"></li>
+    <li id="navUserLogout"><a href="#/logout">Logout</a></li>
+  </ul>
+</li>
+<li class="navIcon">
+  <a tabindex="0" role="button" data-container="body" data-trigger="focus" href="javascript:void(0);" data-toggle="popover" data-placement="left" data-html=true data-content="HELP" id="support">
+  <i class="icon icon-question"></i></a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="hide"><a href="#">About ScION</a></li>
+  </ul>
+</li>
+
+<% } else { %>
+
+  <li class="login"><a href="#" data-target="#modal-login" data-toggle="modal">Sign In</a></li>
+<% if (registration_enabled) {%>
+  <li class="login"><a href="#" id="sign_up" data-target="#modal-register" data-toggle="modal">Register</a></li>
+<% } %>
+
+<% } %>

@@ -25,7 +25,7 @@
     <script src="bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
 </head>
-<body class="full_height is_login_page">
+<body class="full-height is_login_page">
 <!--[if lt IE 10]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a> to improve your experience.</p>
@@ -68,17 +68,13 @@
 </header>
 
 <section class="container-fluid">
-    <!-- Tab content -->
-    <div id="contentTabs" class="tab-content full_height">
-        <div id="mainTab" class="tab-pane active full_height"></div>
-    </div>
+    <div id="scionMain" class="full-height"></div>
 </section>
 
 <!-- Targets for modal dialogs -->
 <div class="modal fade" id="modal-login"></div>
 <div class="modal fade" id="modal-register"></div>
 
-<script src="//apis.google.com/js/client.js?onload=load"></script>
 <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry&region=US&language=en_US"></script>
 
 <!-- build:js scripts/vendor.js -->
@@ -88,9 +84,6 @@
 <script src="bower_components/backbone/backbone.js"></script>
 <!-- endbuild -->
 
-<!-- build:js scripts/kendo.js -->
-<!-- endbuild -->
-
 <!-- build:js scripts/plugins.js -->
 <!-- endbuild -->
 
@@ -98,9 +91,17 @@
 <script src="scripts/app.js"></script>
 <script src="scripts/init.js"></script>
 <script src="scripts/constants.js"></script>
-
 <script src="scripts/templates.js"></script>
 <script src="scripts/router.js"></script>
+<script src="scripts/libs/map_api.js"></script>
+
+<script src="scripts/models/session.js"></script>
+
+<script src="scripts/views/root_view.js"></script>
+<script src="scripts/views/nav_menu.js"></script>
+<script src="scripts/views/scion_view.js"></script>
+<script src="scripts/views/scion_map_view.js"></script>
+<script src="scripts/views/map_view.js"></script>
 <!-- endbuild -->
 
 </body>

@@ -1,0 +1,9 @@
+<div id="scionContent" class="full-height">
+  <div></div>
+</div>
+
+<div id="scionContentAuth" style="<% if (! APP.MODEL.SESSION.is_logged_in()) { %>display: none;<% } %>">
+</div>
+
+<div id="scionContentNoAuth" style="<% if (APP.MODEL.SESSION.is_logged_in()) { %>display: none;<% } %>">
+</div>

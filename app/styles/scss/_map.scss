@@ -1,0 +1,15 @@
+.map_wrap {
+  float: left;
+  width: 100%;
+
+  .map-menu {
+    width: $map_wrap_width;
+  }
+}
+
+#map-container, #map-container-area {
+  width: auto;
+  height: 500px;
+  margin-left: -15px;
+  margin-right: -15px;
+}

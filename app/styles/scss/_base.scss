@@ -1,0 +1,31 @@
+html {
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: ost antialiased !important;
+  -moz-font-smoothing: antialiased !important;
+  font-smoothing: antialiased !important;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  color: $text-darkgrey;
+  font-size: 14px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Lato', sans-serif;
+}
+
+.full-height {
+  height: 100%;
+}
+
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  & > .navbar-collapse {
+    margin-right: 0;
+    margin-left: 0;
+  }
+}
