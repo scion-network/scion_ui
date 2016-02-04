@@ -205,8 +205,15 @@
             usemin: {
                 html: ['<%= yeoman.dist %>/{,*/}*.html'],
                 css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
+                js: ['<%= yeoman.dist %>/scripts/*.js'],
                 options: {
-                    dirs: ['<%= yeoman.dist %>']
+                    dirs: ['<%= yeoman.dist %>'],
+                    assetsDirs: ['<%= yeoman.dist %>', '<%= yeoman.dist %>/images'],
+                    patterns: {
+                        js: [
+                            [/(images\/.*?\.(?:gif|jpeg|jpg|png|webp))/gm, 'Update the JS to reference our revved images']
+                        ]
+                    }
                 }
             },
             imagemin: {
