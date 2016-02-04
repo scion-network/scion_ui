@@ -6,4 +6,6 @@
     APP.Constants.SessionInterval = 900000;
     APP.Constants.ErrorUpdateInterval = 30000;
 
+    APP.Constants.IconSprite = "images/salt_sprite.png";
+
 })();

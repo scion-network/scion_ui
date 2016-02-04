@@ -1,0 +1,12 @@
+.icon_sp {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  background-image: url($icon_sprite);
+  background-repeat: no-repeat;
+
+  &.icon-instrument {
+    background-position: -480px -480px;
+    vertical-align: middle;
+  }
+}

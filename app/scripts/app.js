@@ -33,17 +33,19 @@
         APP.ROUTER = new APP.Router();
         APP.MODEL.SESSION = new APP.Models.Session();
 
+        // Globally managed collections and models
+        APP.COLL.INSTRUMENTS = new APP.Collections.Instruments();
+
         // Get current user session (from previous login and cookie) - sync call
         if (APP.token_is_valid()) {
             // Start data loading - user is logged in
             APP.setup_ajax_token();
             APP.fetch_session();
         } else {
-            // Get param to show hide sign in
-            //APP.MODEL.SESSION.fetch();
+            APP.MODEL.SESSION.fetch();
         }
 
-        // Globally managed collections and models
+        this.fetch_collections();
 
         // Root view, instantiating all other nested views
         APP.VIEW.ROOT = new APP.Views.RootView().render();
@@ -54,7 +56,7 @@
         }
 
         if (!Backbone.history.fragment) {
-            APP.ROUTER.navigate("#map/main");
+            APP.ROUTER.navigate("#map/main", {trigger: true});
         }
 
         return APP.ROUTER;
@@ -75,6 +77,11 @@
         //APP.ROUTER.navigate("#map/main");
     };
 
+    APP.fetch_collections = function () {
+        'use strict';
+        APP.COLL.INSTRUMENTS.refresh_coll();
+    };
+
     APP.do_user_refresh = function () {
         'use strict';
         // Performs all actions after user login or page reload with session
@@ -84,7 +91,7 @@
 
         // Set default route if none set
         if (!Backbone.history.fragment) {
-            APP.ROUTER.navigate("#");
+            APP.ROUTER.navigate("#map/main");
         }
 
         APP.trigger("app:user-refreshed");
