@@ -62,4 +62,10 @@ $(document).ready(function () {
         setTimeoutOptions();
     });
 
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
+
 });

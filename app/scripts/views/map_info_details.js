@@ -4,7 +4,7 @@
 
     APP.Views.MapInfoDetailsView = Backbone.View.extend({
         events: {
-            'click #map-details-chart-check-rt': 'checkRealTime',
+            'click #map-details-chart-check-rt': 'checkRealTime'
         },
 
         el: "#map-info-details-content",
@@ -60,7 +60,7 @@
                 xAxis: {
                     type: 'datetime',
                     title: {text: "Time"},
-                    tickPixelInterval: 150,
+                    tickPixelInterval: 120,
                     dateTimeLabelFormats: {
                         millisecond: '%H:%M:%S.%L<br>%e-%b-%Y',
                         second: '%H:%M:%S<br>%e-%b-%Y',
@@ -75,6 +75,9 @@
                 },
                 yAxis: {
                     title: null,
+                },
+                exporting: {
+                    enabled: true
                 },
                 credits: false,
                 series: seriesData
@@ -100,6 +103,7 @@
         },
         updateRealTime: function ($check) {
             var lastTime = this.chart.series[0].data[this.chart.series[0].data.length-1].x,
+                doReplace = this.chart.series[0].data.length > 200,
                 self = this;
             $.ajax({
                 type: 'POST',
@@ -115,7 +119,7 @@
                         _.forEach(self.chart.series, function(serobj) {
                             if (serobj.name !== name) return;
                             _.forEach(obj, function(val) {
-                                serobj.addPoint(val, false, true);
+                                serobj.addPoint(val, false, doReplace);
                             });
                             self.chart.redraw();
                         });
