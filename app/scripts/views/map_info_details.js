@@ -4,6 +4,7 @@
 
     APP.Views.MapInfoDetailsView = Backbone.View.extend({
         events: {
+            'click #map-details-chart-check-rt': 'checkRealTime',
         },
 
         el: "#map-info-details-content",
@@ -13,6 +14,7 @@
 
         initialize: function () {
             APP.bindAll(this);
+            this.chartTimer = null;
         },
 
         render: function () {
@@ -47,9 +49,10 @@
             _.forEach(result.data, function(obj, name) {
                 seriesData.push({name: name, data: obj});
             });
-            var chart = $("#map-details-chart").highcharts({
+            $("#map-details-chart").highcharts({
                 chart: {
-                    type: 'line'
+                    type: 'line',
+                    zoomType: 'x'
                 },
                 title: {
                     text: null
@@ -57,6 +60,7 @@
                 xAxis: {
                     type: 'datetime',
                     title: {text: "Time"},
+                    tickPixelInterval: 150,
                     dateTimeLabelFormats: {
                         millisecond: '%H:%M:%S.%L<br>%e-%b-%Y',
                         second: '%H:%M:%S<br>%e-%b-%Y',
@@ -75,7 +79,50 @@
                 credits: false,
                 series: seriesData
             });
+            var chart = $("#map-details-chart").highcharts();
+            APP.chart = chart;
             this.chart = chart;
+        },
+        checkRealTime: function (item) {
+            var $check = $(item.currentTarget),
+                self = this;
+            if ($check[0].checked) {
+                self.updateRealTime($check);
+                this.chartTimer = setInterval(function () {
+                    self.updateRealTime($check);
+                }, 5000);
+            } else {
+                if (this.chartTimer) {
+                    clearInterval(this.chartTimer);
+                    this.chartTimer = null;
+                }
+            }
+        },
+        updateRealTime: function ($check) {
+            var lastTime = this.chart.series[0].data[this.chart.series[0].data.length-1].x,
+                self = this;
+            $.ajax({
+                type: 'POST',
+                url: APP.svc_url("scion_management", "get_asset_data"),
+                data: APP.svc_args({
+                    asset_id: $check.data("aid"),
+                    data_filter: {start_time: lastTime, start_time_include: false}
+                }),
+                success: function (response) {
+                    var result = response.result;
+                    _.forEach(result.data, function(obj, name) {
+                        if (! obj.length) return;
+                        _.forEach(self.chart.series, function(serobj) {
+                            if (serobj.name !== name) return;
+                            _.forEach(obj, function(val) {
+                                serobj.addPoint(val, false, true);
+                            });
+                            self.chart.redraw();
+                        });
+                    });
+                }
+            });
+
         },
 
     });
