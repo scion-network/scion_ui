@@ -1,6 +1,8 @@
 (function () {
     'use strict';
 
+    APP.Constants.DefaultRoute = "#map/main";
+
     APP.Constants.AppHeaderHeight = 60;
 
     APP.Constants.SessionInterval = 900000;

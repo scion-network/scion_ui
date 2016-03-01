@@ -1,0 +1,128 @@
+.modal {
+    .modal-dialog {
+        max-width: 480px;
+        margin-top: 70px;
+    }
+
+    .modal-content {
+        border-radius: 0;
+        box-shadow: none;
+        border: 0;
+    }
+
+    .modal-header {
+        padding: 25px 75px;
+        border-bottom: 0;
+        .close {
+            font-size: 20px;
+            color: #333;
+            position: absolute;
+            top: 12px;
+            right: 20px;
+            font-weight: bold;
+        }
+        h4 {
+            font-size: 24px;
+            font-family: inherit;
+            text-align: center;
+        }
+    }
+
+    .modal-body {
+        padding: 10px 75px;
+        .btn-block {
+            padding: 15px 0;
+            text-align: center;
+            border-top: 0;
+            >a {
+                color: #006cd8;
+            }
+        }
+    }
+
+    .modal-footer {
+        text-align: center;
+        border-top: 0;
+        >a {
+            color: #006cd8;
+        }
+
+    }
+
+    .form-group {
+        .form-control {
+            box-shadow: none;
+            border-radius: 0;
+        }
+        &:not(.has-error) {
+            > input,
+            > textarea,
+            > div > textarea {
+                border: 1px solid #878787;
+                color: $text-darkgrey;
+            }
+            > label {
+                font-size: 14px;
+                font-weight: 400;
+                &.show-password {
+                    font-size: 13px;
+                }
+            }
+        }
+    }
+    .alert-hidden {
+        display: none;
+    }
+    .padding-bottom-none {
+        padding-bottom: 0;
+    }
+}
+
+.required{
+    border: 1px solid red;
+}
+
+.alert-reminder {
+    animation: shake 1s linear 1;
+    -ms-animation: shake 1s linear 1;
+    -webkit-animation: shake 1s linear 1;
+}
+
+.tooltip {
+    font-size: 13px;
+    &.top {
+        > .tooltip-arrow {
+            border-top-color: #f5f5f5;
+        }
+    }
+    &.bottom {
+        > .tooltip-arrow {
+            border-bottom-color: #f5f5f5;
+        }
+    }
+    > .tooltip-inner {
+        color: #222;
+        background-color: #f5f5f5;
+        border-radius: 0;
+    }
+}
+
+@keyframes shake {
+    0%, 100% {transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {transform: translateX(-10px);}
+    20%, 40%, 60%, 80% {transform: translateX(10px);}
+}
+@-webkit-keyframes shake {
+    0%, 100% {-webkit-transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {-webkit-transform: translateX(-10px);}
+    20%, 40%, 60%, 80% {-webkit-transform: translateX(10px);}
+}
+@-ms-keyframes shake {
+    0%, 100% {-ms-transform: translateX(0);}
+    10%, 30%, 50%, 70%, 90% {-ms-transform: translateX(-10px);}
+    20%, 40%, 60%, 80% {-ms-transform: translateX(10px);}
+}
+
+.bold_link {
+  font-weight: bold;
+}

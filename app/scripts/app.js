@@ -36,107 +36,111 @@
         // Globally managed collections and models
         APP.COLL.INSTRUMENTS = new APP.Collections.Instruments();
 
-        // Get current user session (from previous login and cookie) - sync call
-        if (APP.token_is_valid()) {
-            // Start data loading - user is logged in
-            APP.setup_ajax_token();
-            APP.fetch_session();
-        } else {
-            APP.MODEL.SESSION.fetch();
-        }
+        APP.setupAjaxToken();
 
-        this.fetch_collections();
+        // Get user session - sync call
+        APP.MODEL.SESSION.fetch().done(function () {
+            // Root view, instantiating all other nested views
+            APP.VIEW.ROOT = new APP.Views.RootView().render();
 
-        // Root view, instantiating all other nested views
-        APP.VIEW.ROOT = new APP.Views.RootView().render();
+            APP.doUserRefresh();
 
-        if (!Backbone.History.started) {
-            // Call after every route and view has been set up
-            Backbone.history.start();
-        }
-
-        if (!Backbone.history.fragment) {
-            APP.ROUTER.navigate("#map/main", {trigger: true});
-        }
+            if (!Backbone.History.started) {
+                // Call after every route and view has been set up
+                Backbone.history.start();
+            }
+            if (!Backbone.history.fragment) {
+                APP.ROUTER.navigate(APP.Constants.DefaultRoute, {trigger: true});
+            }
+        });
 
         return APP.ROUTER;
     };
 
-    APP.fetch_session = function() {
+    APP.showHome = function () {
         'use strict';
-        APP.MODEL.SESSION.fetch({
-            success: function() {
-               APP.do_user_refresh();
-            }
-        });
+        APP.VIEW.ROOT && APP.VIEW.ROOT.viewsMap.scion.render();
     };
 
-    APP.show_home = function () {
+    APP.fetchSession = function() {
         'use strict';
-        APP.VIEW.ROOT.viewsMap.scion.render();
-        //APP.ROUTER.navigate("#map/main");
+        return APP.MODEL.SESSION.fetch()
+            .done(APP.doUserRefresh);
     };
 
-    APP.fetch_collections = function () {
+    APP.doUserRefresh = function () {
+        // Performs all actions after user login or page reload with session or logout
         'use strict';
-        APP.COLL.INSTRUMENTS.refresh_coll();
-    };
-
-    APP.do_user_refresh = function () {
-        'use strict';
-        // Performs all actions after user login or page reload with session
-        var username = APP.MODEL.SESSION.get("username");
-
-        APP.trigger("app:user-refresh");
 
         // Set default route if none set
         if (!Backbone.history.fragment) {
-            APP.ROUTER.navigate("#map/main");
+            APP.ROUTER.navigate(APP.Constants.DefaultRoute, {trigger: true});
         }
 
-        APP.trigger("app:user-refreshed");
+        APP.trigger("app:user-refresh");
+
+        // Async - load data collections
+        APP.fetchCollections().done(function () {
+            APP.trigger("app:user-refreshed");
+        });
     };
 
-    APP.do_user_login = function (data, successCallback, errorCallback) {
+    APP.fetchCollections = function () {
         'use strict';
+        return APP.COLL.INSTRUMENTS.refreshColl();
+    };
 
+    APP.doUserLogin = function (data, successCallback, errorCallback) {
+        'use strict';
         var loginData = data.newUser ? {client_id: "scion_ui", grant_type: "password", username: data.email, password: data.password} :
             _.extend({client_id: "scion_ui", grant_type: "password"}, data);
-        $.ajax({
+        return $.ajax({
             type: 'POST',
             url: '/oauth/token',
             data: loginData,
             success: function(data) {
                 localStorage.setItem("access_token", data.access_token);
-                APP.setup_ajax_token();
-                successCallback();
-                APP.ROUTER.navigate("#");
+                APP.fetchSession().done(function () {
+                    successCallback && successCallback();
+                    APP.ROUTER.navigate(APP.Constants.DefaultRoute, {trigger: true});
+                    APP.trigger("app:user-login");
+                });
             },
             error: errorCallback
         });
     };
 
-    APP.do_user_logout = function () {
+    APP.doUserLogout = function () {
+        'use strict';
+        return $.ajax({
+            url: "auth/logout",
+            success: function() {
+                APP.doUserClearSession();
+                APP.doUserRefresh();
+            }
+        });
+    };
+
+    APP.doUserClearSession = function () {
         'use strict';
         APP.MODEL.SESSION.clear({ silent: true });
 
-        localStorage.removeItem("layers_status");
         clearTimeout(APP.session_timer);
 
         APP.trigger("app:user-logout");
 
-        APP.ROUTER.navigate("#");
+        APP.ROUTER.navigate(APP.Constants.DefaultRoute, {trigger: true});
         localStorage.removeItem("access_token");
     };
 
-    APP.setup_ajax_token = function() {
+    APP.setupAjaxToken = function() {
         'use strict';
         $.ajaxSetup({
             beforeSend: APP.svc_auth
         });
     };
 
-    APP.token_is_valid = function() {
+    APP.isValidToken = function() {
         'use strict';
         var access_token = localStorage.getItem("access_token");
 
@@ -145,10 +149,10 @@
 
     APP.svc_auth = function(xhr) {
         'use strict';
-        if (APP.token_is_valid()) {
+        if (APP.isValidToken()) {
             xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem("access_token"));
         } else {
-            APP.do_user_logout();
+            APP.doUserClearSession();
         }
     };
 

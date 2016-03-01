@@ -1,0 +1,44 @@
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">x</span></button>
+            <h4 class="modal-title">Register User</h4>
+        </div>
+        <div class="alert alert-danger main hidden" role="alert">
+            <i class="fa fa-exclamation-circle"></i> Please correct the highlighted fields below!
+        </div>
+        <div class="alert alert-danger not-match hidden" role="alert">
+            <i class="fa fa-exclamation-circle"></i> Password doesn't match or too short (minimum is 6 characters).
+        </div>
+        <div class="alert alert-danger server hidden" role="alert">
+            <i class="fa fa-exclamation-circle"></i> <span></span>
+        </div>
+        <div class="modal-body">
+            <form role="form" id="registerForm">
+                <div class="form-group">
+                    <label for="registerFirstname">First name</label>
+                    <input name="first_name" type="text" class="form-control" id="registerFirstname" autofocus required/>
+                </div>
+                <div class="form-group">
+                    <label for="registerLastname">Last name</label>
+                    <input name="last_name" type="text" class="form-control" id="registerLastname" required/>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Password</label>
+                    <input name="password" type="password" class="form-control" id="registerPassword" required/>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" required/>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">Email address</label>
+                    <input name="email" type="email" class="form-control" id="registerEmail" required/>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" id="submit_register" class="btn btn-grey">Register</button>
+        </div>
+    </div>
+</div>

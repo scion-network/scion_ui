@@ -7,14 +7,16 @@
         template: JST['app/scripts/templates/nav-menu/nav-user-menu.ejs'],
         current_user_id: "",
         events: {
-            'click .change-password' : 'changePassword',
-            'click .login>a' : 'openLoginModal',
-            'click .register>a' : 'openRegisterModal'
+            'click #navUserSettings' : 'accountSettings',
+            'click #navUserChangePassword' : 'changePassword',
+            'click .login>a#menuSignIn' : 'openLoginModal',
+            'click .login>a#menuSignUp' : 'openRegisterModal'
         },
 
         initialize: function () {
             APP.bindAll(this);
             this.listenTo(this.model, "change", this.render);
+            this.listenTo(APP, "app:user-refresh", this.render);
         },
         render: function () {
             this.$el.html(this.template(this.model.toJSON()));
@@ -22,7 +24,7 @@
             if (this.current_user_id !== user_id) {
 
                 this.current_user_id = user_id;
-                APP.refresh_home();  // NOTE: User change navigation
+                //APP.refresh_home();  // NOTE: User change navigation
             }
             return this;
         },
@@ -31,20 +33,25 @@
 
             this.$("#navUserBadge").html(notif_count || "");
         },
-        changePassword: function () {
-            var passwordModel = new APP.Models.ModalPasswordMenageModel({user_id: this.model.get('user_id')});
-
-            this.changePass = new APP.Views.ModalChangePasswordView({model: passwordModel}).render();
+        accountSettings: function (evt) {
+            evt.preventDefault();
+            this.modalDialog = new APP.Views.ModalUserAccountView().render();
+            this.modalDialog.showModal();
         },
-        openLoginModal: function () {
-            var passwordModel = APP.MODEL.MODAL_LOGIN;
-
-            this.modalLogin = new APP.Views.ModalLoginView({model: passwordModel});
+        changePassword: function (evt) {
+            evt.preventDefault();
+            this.modalDialog = new APP.Views.ModalNewPasswordView().render();
+            this.modalDialog.showModal();
         },
-        openRegisterModal: function () {
-            var passwordModel = APP.MODEL.MODAL_REGISTER;
-
-            this.modalRegister = new APP.Views.ModalRegisterView({model: passwordModel});
+        openLoginModal: function (evt) {
+            evt.preventDefault();
+            this.modalDialog = new APP.Views.ModalLoginView().render();
+            this.modalDialog.showModal();
+        },
+        openRegisterModal: function (evt) {
+            evt.preventDefault();
+            this.modalDialog = new APP.Views.ModalRegisterView().render();
+            this.modalDialog.showModal();
         }
     });
 

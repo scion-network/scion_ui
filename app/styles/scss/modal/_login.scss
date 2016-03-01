@@ -1,0 +1,45 @@
+#modal-login {
+  h6 {
+    font-size: 16px;
+    font-family: inherit;
+    margin-bottom: 5px;
+    margin-top: 0;
+  }
+}
+
+.modal {
+  input[type=checkbox] {
+    display: none;
+    & + label {
+      display: inline-block;
+      cursor: pointer;
+      line-height: 16px;
+      i {
+        display: none;
+        color: #878787;
+      }
+      span {
+        vertical-align: top;
+        &.checkbox {
+          width: 17px;
+          height: 17px;
+          display: inline-block;
+          border: 1px solid #878787;
+          border-radius: 0px;
+          margin-top: 0;
+          margin-bottom: 0;
+          margin-right: 7px;
+          position: relative;
+          padding-left: 0;
+          min-height: 17px;
+        }
+      }
+    }
+    &:checked + label i {
+      display: block;
+      position: absolute;
+      top: 1px;
+      left: 1px;
+    }
+  }
+}

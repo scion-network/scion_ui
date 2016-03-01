@@ -72,8 +72,7 @@
 </section>
 
 <!-- Targets for modal dialogs -->
-<div class="modal fade" id="modal-login"></div>
-<div class="modal fade" id="modal-register"></div>
+<div class="modal fade" id="modal-user"></div>
 
 <script src="https://maps.googleapis.com/maps/api/js?libraries=drawing,geometry&region=US&language=en_US"></script>
 
@@ -87,6 +86,18 @@
 <!-- endbuild -->
 
 <!-- build:js scripts/plugins.js -->
+<script src="bower_components/sass-bootstrap/js/affix.js"></script>
+<script src="bower_components/sass-bootstrap/js/alert.js"></script>
+<script src="bower_components/sass-bootstrap/js/dropdown.js"></script>
+<script src="bower_components/sass-bootstrap/js/tooltip.js"></script>
+<script src="bower_components/sass-bootstrap/js/modal.js"></script>
+<script src="bower_components/sass-bootstrap/js/transition.js"></script>
+<script src="bower_components/sass-bootstrap/js/button.js"></script>
+<script src="bower_components/sass-bootstrap/js/popover.js"></script>
+<script src="bower_components/sass-bootstrap/js/carousel.js"></script>
+<script src="bower_components/sass-bootstrap/js/scrollspy.js"></script>
+<script src="bower_components/sass-bootstrap/js/collapse.js"></script>
+<script src="bower_components/sass-bootstrap/js/tab.js"></script>
 <!-- endbuild -->
 
 <!-- build:js({.tmp,app}) scripts/main.js -->
@@ -98,13 +109,19 @@
 <script src="scripts/libs/map_api.js"></script>
 
 <script src="scripts/models/session.js"></script>
-
 <script src="scripts/models/instrument.js"></script>
 
 <script src="scripts/collections/instruments.js"></script>
 
+<script src="scripts/views/base_view.js"></script>
+<script src="scripts/views/modal_view.js"></script>
 <script src="scripts/views/root_view.js"></script>
 <script src="scripts/views/nav_menu.js"></script>
+<script src="scripts/views/user/modal_login.js"></script>
+<script src="scripts/views/user/modal_register.js"></script>
+<script src="scripts/views/user/modal_account.js"></script>
+<script src="scripts/views/user/modal_pwdchange.js"></script>
+
 <script src="scripts/views/scion_view.js"></script>
 <script src="scripts/views/scion_map_view.js"></script>
 <script src="scripts/views/map_view.js"></script>

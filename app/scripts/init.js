@@ -31,7 +31,7 @@ $(document).ready(function () {
     $(document).ajaxError(function(event, jqxhr) {
         var refresh_count;
         if (jqxhr.status === 401) {
-            APP.do_user_logout();
+            APP.doUserClearSession();
             return;
         }
 
@@ -44,14 +44,14 @@ $(document).ready(function () {
 
             if (refresh_count > 5) {
                 clearTimeout(APP.refresh_timer);
-                APP.do_user_logout();
+                APP.doUserClearSession();
                 return;
             }
 
             APP.refresh_timer = setTimeout(function() {
                 refresh_count += 1;
                 localStorage.setItem("refresh_count", refresh_count);
-                APP.fetch_session();
+                APP.fetchSession();
             }, APP.Constants.ErrorUpdateInterval);
         }
 
@@ -69,3 +69,23 @@ $(document).ready(function () {
     });
 
 });
+
+$.fn.serializeObject = function() {
+    var o = Object.create(null),
+        elementMapper = function(element) {
+            element.name = $.camelCase(element.name);
+            return element;
+        },
+        appendToResult = function(i, element) {
+            var node = o[element.name];
+
+            if ('undefined' != typeof node && node !== null) {
+                o[element.name] = node.push ? node.push(element.value) : [node, element.value];
+            } else {
+                o[element.name] = element.value;
+            }
+        };
+
+    $.each($.map(this.serializeArray(), elementMapper), appendToResult);
+    return o;
+};

@@ -12,7 +12,7 @@
             };
 
             this.listenTo(APP, "app:user-refresh", this.showContent);
-            this.listenTo(APP, "app:user-logout", this.hideContent);
+            //this.listenTo(APP, "app:user-logout", this.hideContent);
             this.listenTo(APP, "app:main-menu", this.showSubView);
         },
         render: function() {
@@ -53,12 +53,17 @@
             newView.onShow();
         },
         showContent: function() {
-            $("body").removeClass("is_login_page");
-            this.$("#scionContentAuth").css("display", "block");
-            this.$("#scionContentNoAuth").css("display", "none");
+            if (APP.MODEL.SESSION.get("user_id")) {
+                this.$("#scionContentAuth").css("display", "block");
+                this.$("#scionContentNoAuth").css("display", "none");
+            } else {
+                this.$("#scionContentNoAuth").css("display", "block");
+                this.$("#scionContentAuth").css("display", "none");
+            }
         },
         hideContent: function() {
-            $("body").addClass("is_login_page");
+            console.log("HIDE scion");
+            //$("body").addClass("is_login_page");
             this.$("#scionContentNoAuth").css("display", "block");
             this.$("#scionContentAuth").css("display", "none");
             if (this.currentView) {
