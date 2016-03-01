@@ -10,7 +10,7 @@
         },
 
         home: function () {
-            this.navigate(APP.Constants.DefaultRoute);
+            this.navigate(APP.Constants.DefaultRoute, {trigger: true});
         },
         logout: function() {
             APP.doUserLogout();
