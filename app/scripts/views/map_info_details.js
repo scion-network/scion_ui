@@ -35,7 +35,8 @@
                 type: 'POST',
                 url: APP.svc_url("scion_management", "get_asset_data"),
                 data: APP.svc_args({
-                    'asset_id': item.id
+                    asset_id: item.id,
+                    data_filter: {max_rows: 10000}
                 }),
                 success: function (response) {
                     var result = response.result;
@@ -110,7 +111,7 @@
                 url: APP.svc_url("scion_management", "get_asset_data"),
                 data: APP.svc_args({
                     asset_id: $check.data("aid"),
-                    data_filter: {start_time: lastTime, start_time_include: false}
+                    data_filter: {start_time: lastTime, start_time_include: false, max_rows: 10000}
                 }),
                 success: function (response) {
                     var result = response.result;
