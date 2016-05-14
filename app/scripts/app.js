@@ -115,22 +115,25 @@
         return $.ajax({
             url: "auth/logout",
             success: function() {
-                APP.doUserClearSession();
+                APP.doUserClearSession(true);
                 APP.doUserRefresh();
             }
         });
     };
 
-    APP.doUserClearSession = function () {
+    APP.doUserClearSession = function (isLogout) {
         'use strict';
         APP.MODEL.SESSION.clear({ silent: true });
 
         clearTimeout(APP.session_timer);
 
-        APP.trigger("app:user-logout");
+        if (isLogout) {
+            APP.trigger("app:user-logout");
 
-        APP.ROUTER.navigate(APP.Constants.DefaultRoute, {trigger: true});
-        localStorage.removeItem("access_token");
+            APP.ROUTER.navigate(APP.Constants.DefaultRoute, {trigger: true});
+
+            localStorage.removeItem("access_token");
+        }
     };
 
     APP.setupAjaxToken = function() {

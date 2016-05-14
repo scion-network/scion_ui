@@ -17,7 +17,10 @@
 
 <div class="row">
   <div class="col-md-12">
-    <input type="checkbox" name="Foo" id="map-details-chart-check-rt" data-aid="<%= _id %>">&nbsp;Real-time Update</input>
+    <span class="">
+      <i class="icon_button icon-zoom"></i>
+      &nbsp;Show advanced (real-time) graph&nbsp;
+    </span>
   </div>
 </div>
 
@@ -26,4 +29,8 @@
 
 <h4>Datasets</h4>
 
-
+<div class="row">
+  <div class="col-md-12">
+    <a class="inst-download-ds" data-dsid="<%= _id %>" href="#">Download Dataset as HDF</a>
+  </div>
+</div>

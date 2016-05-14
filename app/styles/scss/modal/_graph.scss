@@ -1,0 +1,25 @@
+#modal-graph {
+  div.modal > & {
+    max-width: 900px;
+    width: 900px;
+  }
+  .modal-dialog {
+  }
+  .modal-content {
+  }
+  .modal-header {
+    padding-bottom: 10px;
+    h4 {
+      //font-size: 18px;
+      //text-align: left;
+      //margin-top: 10px;
+    }
+  }
+  .modal-body {
+    padding-top: 0;
+    padding-left: 40px;
+    padding-right: 40px;
+    display: block;
+  }
+
+}

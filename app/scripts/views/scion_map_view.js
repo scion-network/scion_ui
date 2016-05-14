@@ -88,7 +88,7 @@
                         }
                     });
                     APP.MapData.InstrumentMarkers[item.id].addListener('click', function() {
-                        console.log("click", item.id);
+                        //console.log("click", item.id);
                         self.showSideBar();
                         self.tabs.details.showInstrument(item);
                     });

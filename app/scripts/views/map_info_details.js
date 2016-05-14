@@ -4,7 +4,8 @@
 
     APP.Views.MapInfoDetailsView = Backbone.View.extend({
         events: {
-            'click #map-details-chart-check-rt': 'checkRealTime'
+            'click i.icon_button.icon-zoom': 'selectZoom',
+            'click a.inst-download-ds': 'downloadData'
         },
 
         el: "#map-info-details-content",
@@ -14,7 +15,7 @@
 
         initialize: function () {
             APP.bindAll(this);
-            this.chartTimer = null;
+            this.currentItem = null;
         },
 
         render: function () {
@@ -24,8 +25,8 @@
         showTab: function () {
         },
         showInstrument: function (item) {
-            console.log("Instrument", item, $("#map-info-details"));
             $("#map-info-details").html(this.templateInstDetails(item.toJSON()));
+            this.currentItem = item;
 
             this.showChart(item);
         },
@@ -87,49 +88,16 @@
             APP.chart = chart;
             this.chart = chart;
         },
-        checkRealTime: function (item) {
-            var $check = $(item.currentTarget),
-                self = this;
-            if ($check[0].checked) {
-                self.updateRealTime($check);
-                this.chartTimer = setInterval(function () {
-                    self.updateRealTime($check);
-                }, 5000);
-            } else {
-                if (this.chartTimer) {
-                    clearInterval(this.chartTimer);
-                    this.chartTimer = null;
-                }
-            }
+        selectZoom: function () {
+            var graphModel = new Backbone.Model({instrumentId: this.currentItem.id, instrument: this.currentItem}),
+                graphView = new APP.Views.ModalGraphView({model: graphModel});
+            graphView.render();
+            graphView.showModal();
         },
-        updateRealTime: function ($check) {
-            var lastTime = this.chart.series[0].data[this.chart.series[0].data.length-1].x,
-                doReplace = this.chart.series[0].data.length > 200,
-                self = this;
-            $.ajax({
-                type: 'POST',
-                url: APP.svc_url("scion_management", "get_asset_data"),
-                data: APP.svc_args({
-                    asset_id: $check.data("aid"),
-                    data_filter: {start_time: lastTime, start_time_include: false, max_rows: 10000}
-                }),
-                success: function (response) {
-                    var result = response.result;
-                    _.forEach(result.data, function(obj, name) {
-                        if (! obj.length) return;
-                        _.forEach(self.chart.series, function(serobj) {
-                            if (serobj.name !== name) return;
-                            _.forEach(obj, function(val) {
-                                serobj.addPoint(val, false, doReplace);
-                            });
-                            self.chart.redraw();
-                        });
-                    });
-                }
-            });
-
-        },
-
+        downloadData: function (evt) {
+            evt.preventDefault();
+            console.log("DOWNLOAD");
+        }
     });
 
 })();

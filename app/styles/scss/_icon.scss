@@ -10,3 +10,29 @@
     vertical-align: middle;
   }
 }
+
+.icon_button {
+  display: inline-block;
+  width: 48px;
+  height: 48px;
+  background-image: $icon_sprite;
+  background-repeat: no-repeat;
+
+  border: 1px solid $color_grey;
+
+  &.icon-zoom {
+    width: 23px;
+    height: 23px;
+    background-position: -718px -298px;
+    vertical-align: middle;
+  }
+
+  &:hover {
+    border: 1px solid $color_grey_light;
+  }
+
+  &:active {
+    border: 1px solid $color_grey;
+  }
+
+}
