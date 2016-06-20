@@ -3,6 +3,7 @@
 
     APP.Views.ScionMapView = Backbone.View.extend({
         events: {
+            'click .list_tab_item': 'setActiveTab',
             'click #tab-map': 'hideSideBar',
             'click #tab-map-list': 'showSideBar',
             'click .close-list': 'hideSideBar',
@@ -91,6 +92,7 @@
                         //console.log("click", item.id);
                         self.showSideBar();
                         self.tabs.details.showInstrument(item);
+                        self.showActiveTab("details");
                     });
                 }
             }, this);
@@ -108,6 +110,7 @@
             this.tabs = {};
             this.tabs.details = new APP.Views.MapInfoDetailsView().render();
             this.tabs.details.showTab();
+            this.tabs.inst = new APP.Views.MapInfoInstrumentsView().render();
         },
         hideSideBar: function () {
             $(".map-navbar-tab").removeClass("active");
@@ -122,6 +125,27 @@
             $(".info_tabs").show();
             $(".map_wrap, .map-menu").css('width', 75 + '%');
             APP.trigger("app-view:resize");
+        },
+        setActiveTab: function (event) {
+            var curElement = this.$(event.currentTarget),
+                tabToSelect = curElement.data("tab"),
+                tabView = this.tabs[tabToSelect];
+
+            if (!curElement.hasClass("active")) {
+                curElement.addClass("active").siblings().removeClass("active");
+                this.$("#map-info-" + tabToSelect + "-content").addClass("active").siblings().removeClass("active");
+                tabView.showTab();
+            }
+        },
+        showActiveTab: function (tabToSelect) {
+            var curElement = this.$("div.list_tab_header").find("> span[data-tab='"+tabToSelect+"']"),
+                tabView = this.tabs[tabToSelect];
+
+            if (!curElement.hasClass("active")) {
+                curElement.addClass("active").siblings().removeClass("active");
+                this.$("#map-info-" + tabToSelect + "-content").addClass("active").siblings().removeClass("active");
+                tabView.showTab();
+            }
         },
 
         // ----- Cleanup -----

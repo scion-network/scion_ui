@@ -10,7 +10,8 @@
             'click #navUserSettings' : 'accountSettings',
             'click #navUserChangePassword' : 'changePassword',
             'click .login>a#menuSignIn' : 'openLoginModal',
-            'click .login>a#menuSignUp' : 'openRegisterModal'
+            'click .login>a#menuSignUp' : 'openRegisterModal',
+            'click .login>a#menuInstruments' : 'showInstruments'
         },
 
         initialize: function () {
@@ -52,6 +53,13 @@
             evt.preventDefault();
             this.modalDialog = new APP.Views.ModalRegisterView().render();
             this.modalDialog.showModal();
+        },
+        showInstruments: function (evt) {
+            evt.preventDefault();
+            if (APP.VIEW.MAP_VIEW) {
+                APP.VIEW.MAP_VIEW.showSideBar();
+                APP.VIEW.MAP_VIEW.showActiveTab("inst");
+            }
         }
     });
 
