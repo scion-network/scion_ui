@@ -33,10 +33,10 @@
             });
             this.$el.find("#map-inst-list").html(this.templateInstList({instruments: instList, instGroups: instGroups}));
             this.$el.find('#map-inst-list ul.collapse').on('shown.bs.collapse', function () {
-                $(this).parent().find("i.indicator").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+                $(this).parent().find("i.indicator").removeClass("fa-chevron-right").addClass("fa-chevron-down");
             });
             this.$el.find('#map-inst-list ul.collapse').on('hidden.bs.collapse', function () {
-                $(this).parent().find("i.indicator").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+                $(this).parent().find("i.indicator").removeClass("fa-chevron-down").addClass("fa-chevron-right");
             });
         },
         selectInst: function (evt) {
