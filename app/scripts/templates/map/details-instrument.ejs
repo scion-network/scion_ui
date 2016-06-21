@@ -2,12 +2,23 @@
 
 <div class="row">
   <div class="col-md-12">
+    Group: <%= model_info.model_group || "Default" %>
+  </div>
+  <div class="col-md-12">
     Description: <%= description %>
+  </div>
+  <div class="col-md-12">
+    Location: <%= location.latitude %>, <%= location.longitude %>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
-    Location: <%= location.latitude %>, <%= location.longitude %>
+    <br>Agent Status:
+    <% if (addl.agent_active) { %>
+      <span style="color: green;">ON</span> - Actions: <a href="#" class="agent-control">STOP</a>
+    <% } else { %>
+      <span style="color: orangered;">OFF</span> - Actions: <a href="#" class="agent-control">START</a>
+    <% } %>
   </div>
 </div>
 

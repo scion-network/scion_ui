@@ -28,6 +28,7 @@
             APP.MapData.MapBounds = null;
 
             APP.MapData.InstrumentMarkers = {};
+            APP.MapData.InstGroupColors = {};
         },
         render: function () {
             this.$el.html(this.template({details: !!this.subID, subID: this.subID}));
@@ -71,8 +72,35 @@
 
         // ----- Instruments -----
 
+        getIconFromFont: function (glyph, color) {
+            // http://stackoverflow.com/questions/16375077/using-icon-fonts-as-markers-in-google-maps-v3
+            // Note that rendering a FontAwesome glyph does not work initially before font loaded
+            var canvas, ctx;
+            canvas = document.createElement('canvas');
+            canvas.width = canvas.height = 30;
+            ctx = canvas.getContext('2d');
+            //ctx.fillRect(0, 0, canvas.width, canvas.height);
+            if (color) {
+                //ctx.strokeStyle = color;
+                ctx.fillStyle = color;
+            }
+            ctx.font = '40px sans-serif';
+            // ctx.font = '40px FontAwesome';
+            ctx.fillText(glyph, 0, 30);
+            return canvas.toDataURL();
+        },
         showInstrumentMarkers: function () {
-            var self = this;
+            var self = this,
+                instGroups = _.groupBy(APP.COLL.INSTRUMENTS.toJSON(), function (item) {
+                    return item["model_info"]["model_group"] || "Default";
+                }),
+                colorPalette = APP.MapAPI.generateColorPalette(_.size(instGroups)),
+                colorPins = {};
+            APP.MapData.InstGroupColors = {};
+            _.forEach(_.keys(instGroups).sort(), function (grpName, idx) {
+                APP.MapData.InstGroupColors[grpName] = colorPalette[idx];
+                colorPins[grpName] = self.getIconFromFont("+", APP.MapAPI.rgbToColor(colorPalette[idx]))
+            });
             this.removeInstrumentMarkers();
             APP.COLL.INSTRUMENTS.each(function (item) {
                 var latlng = item.getLocation();
@@ -82,14 +110,13 @@
                         map: this.mapView.map,
                         title: item.get("name"),
                         icon: {
-                            url: APP.Constants.IconSprite,
-                            size: new google.maps.Size(48, 48),
-                            origin: new google.maps.Point(480, 480),
-                            anchor: new google.maps.Point(24, 24)
+                            url: colorPins[item.get("model_info")["model_group"] || "Default"],
+                            size: new google.maps.Size(30, 30),
+                            origin: new google.maps.Point(0, 0),
+                            anchor: new google.maps.Point(15, 15)
                         }
                     });
                     APP.MapData.InstrumentMarkers[item.id].addListener('click', function() {
-                        //console.log("click", item.id);
                         self.showSideBar();
                         self.tabs.details.showInstrument(item);
                         self.showActiveTab("details");

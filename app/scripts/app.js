@@ -236,8 +236,15 @@
             // http://stackoverflow.com/questions/6569704/destroy-or-remove-a-view-in-backbone-js
             view.undelegateEvents();
             view.$el.removeData().unbind();
-            view.remove();
-            Backbone.View.prototype.remove.call(view);
+            if (view.$el.hasClass('modal') && view.$el.hasClass('fade')){
+                view.stopListening();
+                Backbone.View.prototype.stopListening.call(view);
+                view.$el.children().remove();
+            }
+            else {
+                view.remove();
+                Backbone.View.prototype.remove.call(view);
+            }
             view.unbind();
         }
     };

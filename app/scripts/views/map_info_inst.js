@@ -14,6 +14,7 @@
 
         initialize: function () {
             APP.bindAll(this);
+            this.listenTo(APP, "app-view:resize", this.setPanelHeight);
             this.currentItem = null;
         },
 
@@ -28,9 +29,15 @@
             var instGroups,
                 instList = APP.COLL.INSTRUMENTS.toJSON();
             instGroups = _.groupBy(instList, function (item) {
-                return (item["model_info"] && item["model_info"]["model_group"]) ? item["model_info"]["model_group"]: "";
+                return item["model_info"]["model_group"] || "Default";
             });
             this.$el.find("#map-inst-list").html(this.templateInstList({instruments: instList, instGroups: instGroups}));
+            this.$el.find('#map-inst-list ul.collapse').on('shown.bs.collapse', function () {
+                $(this).parent().find("i.indicator").removeClass("glyphicon-chevron-right").addClass("glyphicon-chevron-down");
+            });
+            this.$el.find('#map-inst-list ul.collapse').on('hidden.bs.collapse', function () {
+                $(this).parent().find("i.indicator").removeClass("glyphicon-chevron-down").addClass("glyphicon-chevron-right");
+            });
         },
         selectInst: function (evt) {
             evt.preventDefault();
@@ -39,6 +46,11 @@
                 inst = APP.COLL.INSTRUMENTS.get(instId);
             APP.VIEW.MAP_VIEW.tabs.details.showInstrument(inst);
             APP.VIEW.MAP_VIEW.showActiveTab("details");
+        },
+        setPanelHeight: function () {
+            var panelHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+            panelHeight -= 165;
+            this.$el.find("#map-inst-list").height(panelHeight);
         }
     });
 

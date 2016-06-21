@@ -5,7 +5,8 @@
     APP.Views.MapInfoDetailsView = Backbone.View.extend({
         events: {
             'click i.icon_button.icon-zoom': 'selectZoom',
-            'click a.inst-download-ds': 'downloadData'
+            'click a.inst-download-ds': 'downloadData',
+            'click a.agent-control': 'agentControl'
         },
 
         el: "#map-info-details-content",
@@ -97,6 +98,39 @@
         downloadData: function (evt) {
             evt.preventDefault();
             console.log("DOWNLOAD");
+        },
+        agentControl: function (evt) {
+            evt.preventDefault();
+            var instId = this.currentItem.id;
+            if (this.currentItem.get("addl").agent_active) {
+                $.ajax({
+                    type: 'POST',
+                    url: APP.svc_url("scion_management", "stop_agent"),
+                    data: APP.svc_args({
+                        asset_id: instId
+                    }),
+                    success: function (response) {
+                        console.log("AGENT STOP SUCCESS");
+                    },
+                    error: function (response) {
+                        console.log("AGENT STOP ERROR");
+                    }
+                });
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: APP.svc_url("scion_management", "start_agent"),
+                    data: APP.svc_args({
+                        asset_id: instId
+                    }),
+                    success: function (response) {
+                        console.log("AGENT START SUCCESS");
+                    },
+                    error: function (response) {
+                        console.log("AGENT START ERROR");
+                    }
+                });
+            }
         }
     });
 

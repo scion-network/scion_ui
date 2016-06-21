@@ -110,7 +110,6 @@
             }
         },
         updateRealTime: function ($check) {
-            console.log("uRT");
             var lastTime = this.chart.series[0].data[this.chart.series[0].data.length-1].x,
                 doReplace = this.chart.series[0].data.length > 10000,
                 self = this;

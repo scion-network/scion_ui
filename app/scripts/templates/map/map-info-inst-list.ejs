@@ -1,14 +1,19 @@
-<p>
-    <% _.each(instGroups, function(instGrpList, grpName) {  %>
-    <a role="menuitem" tabindex="-1" href="javascript:void(0);"><%= grpName || "Default" %></a>
-    <ul>
-    <% _.each(_.sortBy(instGrpList, function (o) { return o["name"]; }), function(inst) {
-    %>
-        <li role="presentation" class="list-el">
-            <a class="inst-list-el" data-inst-id="<%= inst._id %>" role="menuitem" tabindex="-1" href="javascript:void(0);"><%= inst.name %></a>
-        </li>
-    <% }); %>
-    </ul>
-    <% }); %>
-    <br>
-</p>
+<div>
+<% _.each(_.keys(instGroups).sort(), function(grpName, gidx) {
+     var instGrpList = instGroups[grpName]; %>
+    <div>
+        <a role="menuitem" tabindex="-1" data-toggle="collapse" href="#instgrp<%= gidx %>">
+            <i class="indicator glyphicon glyphicon-chevron-down"></i> <%= grpName %>
+        </a>
+        <span style="color: <%= APP.MapAPI.rgbToColor(APP.MapData.InstGroupColors[grpName]) %>; font-weight: bold; font-size: larger;">+</span>
+        <ul class="collapse in" id="instgrp<%= gidx %>">
+        <% _.each(_.sortBy(instGrpList, function (o) { return o["name"]; }), function(inst) { %>
+            <li role="presentation" class="list-el">
+                <a class="inst-list-el" data-inst-id="<%= inst._id %>" role="menuitem" tabindex="-1" href="javascript:void(0);"><%= inst.name %></a>
+                <% if (inst.addl.agent_active) { %>(Agent ON)<%} %>
+            </li>
+        <% }); %>
+        </ul>
+    </div>
+<% }); %>
+</div>
