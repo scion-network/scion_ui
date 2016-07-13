@@ -8,7 +8,7 @@
             user_id: "",
             full_name: "",
             is_logged_in: false,
-            registration_enabled: true,
+            registration_enabled: false,
             version: {},
             // List of roles by org governance name
             roles: {},

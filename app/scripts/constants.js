@@ -10,4 +10,6 @@
 
     APP.Constants.IconSprite = "images/salt_sprite.png";
 
+    APP.Constants.ModalWindowTimeToClose = 2000;
+    
 })();

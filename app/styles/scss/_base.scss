@@ -29,3 +29,66 @@ h1, h2, h3, h4, h5, h6 {
     margin-left: 0;
   }
 }
+
+
+#modal-info-popup {
+    &.error_state {
+        color: #ff0000;
+        .info-popup-error-icon {
+            display: inline-block;
+            &:before {
+                font-size: 50px;
+                font-family: 'FontAwesome';
+                content: "\f071";
+            }
+        }
+
+        .info-popup-message {
+            color: #ff0000;
+        }
+    }
+    &.warning_state {
+        color: #fac80a;
+        .info-popup-warning-icon {
+            display: inline-block;
+            &:before {
+                font-size: 50px;
+                font-family: 'FontAwesome';
+                content: "\f071";
+            }
+        }
+    }
+    &.success_state {
+        color: #4F804B;
+        .info-popup-success-icon {
+            display: inline-block;
+            &:before {
+                font-size: 50px;
+                font-family: 'FontAwesome';
+                content: "\f05d";
+            }
+        }
+
+        .info-popup-message {
+            color: #4F804B;
+            word-wrap: break-word;
+        }
+    }
+
+    .information_popup {
+        text-align: center;
+    }
+
+    .info-popup-success-icon, .info-popup-error-icon {
+        width: 48px;
+        height: 48px;
+        display: none;
+    }
+    .warning_state {
+        display: none;
+    }
+    .btn-block .link {
+        font-weight: 700;
+        margin-right: 30px;
+    }
+}

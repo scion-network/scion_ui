@@ -17,6 +17,7 @@
         initialize: function () {
             APP.bindAll(this);
             this.currentItem = null;
+            this.listenTo(APP.COLL.INSTRUMENTS, "reset sync", this.onRefreshInstruments);
         },
 
         render: function () {
@@ -101,7 +102,7 @@
         },
         agentControl: function (evt) {
             evt.preventDefault();
-            var instId = this.currentItem.id;
+            var instId = this.currentItem.id, self = this;
             if (this.currentItem.get("addl").agent_active) {
                 $.ajax({
                     type: 'POST',
@@ -110,10 +111,13 @@
                         asset_id: instId
                     }),
                     success: function (response) {
-                        console.log("AGENT STOP SUCCESS");
+                        var infoPopup = new APP.Views.ModalInfoPopupView().render();
+                        infoPopup.show({icon: 'success', message: 'Agent was successfully stopped.'});
+                        APP.COLL.INSTRUMENTS.refreshColl();
                     },
                     error: function (response) {
-                        console.log("AGENT STOP ERROR");
+                        var infoPopup = new APP.Views.ModalInfoPopupView().render();
+                        infoPopup.show({icon: 'error', message: 'Agent could not be stopped !'});
                     }
                 });
             } else {
@@ -124,12 +128,24 @@
                         asset_id: instId
                     }),
                     success: function (response) {
-                        console.log("AGENT START SUCCESS");
+                        var infoPopup = new APP.Views.ModalInfoPopupView().render();
+                        infoPopup.show({icon: 'success', message: 'Agent was successfully started.'});
+                        APP.COLL.INSTRUMENTS.refreshColl();
                     },
                     error: function (response) {
-                        console.log("AGENT START ERROR");
+                        var infoPopup = new APP.Views.ModalInfoPopupView().render();
+                        infoPopup.show({icon: 'error', message: 'Agent could not be started !'});
                     }
                 });
+            }
+        },
+        onRefreshInstruments: function () {
+            var instId = this.currentItem && this.currentItem.id;
+            if (instId) {
+                this.currentItem = APP.COLL.INSTRUMENTS.get(instId);
+
+                $("#map-info-details").html(this.templateInstDetails(this.currentItem.toJSON()));
+                this.showChart(this.currentItem);
             }
         }
     });
