@@ -98,7 +98,12 @@
         },
         downloadData: function (evt) {
             evt.preventDefault();
-            console.log("DOWNLOAD");
+            var dsId = $(evt.currentTarget).data("dsid");
+            var paramStr = "?";
+            paramStr += "asset_id=" + dsId;
+            paramStr += "&authtoken=Bearer_" + localStorage.getItem("access_token");
+
+            window.location.href = APP.svc_url("scion_management", "download_asset_data") + paramStr;
         },
         agentControl: function (evt) {
             evt.preventDefault();
