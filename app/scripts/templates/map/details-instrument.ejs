@@ -15,9 +15,9 @@
   <div class="col-md-12">
     <br>Agent Status:
     <% if (addl.agent_active) { %>
-      <span style="color: green;">ON</span> - Actions: <a href="#" class="agent-control">STOP</a>
+      <span style="color: green;">ON</span><% if (APP.hasRole("ION.OPERATOR")) { %> - Actions: <a href="#" class="agent-control">STOP</a><% } %>
     <% } else { %>
-      <span style="color: orangered;">OFF</span> - Actions: <a href="#" class="agent-control">START</a>
+      <span style="color: orangered;">OFF</span><% if (APP.hasRole("ION.OPERATOR")) { %> - Actions: <a href="#" class="agent-control">START</a><% } %>
     <% } %>
   </div>
 </div>

@@ -12,6 +12,7 @@
             version: {},
             // List of roles by org governance name
             roles: {},
+            auth_roles: [],
             ui_mode: 'PRODUCTION',
             // UNIX ts (seconds)
             valid_until: 0

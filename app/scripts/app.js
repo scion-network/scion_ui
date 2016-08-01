@@ -178,6 +178,12 @@
         return { data: JSON.stringify(payload_obj) };
     };
 
+    APP.hasRole = function (role) {
+        'use strict';
+        var authRoles = APP.MODEL.SESSION.get("auth_roles");
+        return !!(authRoles && _.contains(authRoles, role));
+    };
+
     APP.bindAll = function (obj, level) {
         'use strict';
         // Binds this value for all functions of the object's prototype to object value
