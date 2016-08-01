@@ -39,7 +39,7 @@
                 url: APP.svc_url("scion_management", "get_asset_data"),
                 data: APP.svc_args({
                     asset_id: item.id,
-                    data_filter: {max_rows: 10000}
+                    data_filter: {max_rows: 5000}
                 }),
                 success: function (response) {
                     var result = response.result;

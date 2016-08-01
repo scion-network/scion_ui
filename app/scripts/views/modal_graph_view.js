@@ -6,6 +6,8 @@
             "click #graphOK": "graphClose",
             "click #graphCancel": "graphClose",
             'click #modal-graph-chart-check-rt': 'checkRealTime',
+            'click #modal-graph-chart-check-decimate': 'showChart',
+            'click #modal-graph-chart-check-recent': 'showChart',
         },
 
         el: "#modal-dynamic",
@@ -37,13 +39,16 @@
             this.closeModal();
         },
         showChart: function () {
-            var self = this;
+            var self = this,
+                decCheck = this.$("#modal-graph-chart-check-decimate")[0].checked,
+                recCheck = this.$("#modal-graph-chart-check-recent")[0].checked,
+                startTime = (recCheck) ? new Date().getTime() - 86400000 : 0;
             $.ajax({
                 type: 'POST',
                 url: APP.svc_url("scion_management", "get_asset_data"),
                 data: APP.svc_args({
                     asset_id: this.model.get("instrumentId"),
-                    data_filter: {max_rows: 10000}
+                    data_filter: {max_rows: 10000, decimate: !!decCheck, start_time: startTime}
                 }),
                 success: function (response) {
                     var result = response.result;
