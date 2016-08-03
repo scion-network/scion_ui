@@ -36,3 +36,21 @@
   }
 
 }
+
+.fa_icon_button {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 1px solid $color_grey;
+  text-align: center;
+  padding: 2px;
+
+  &:hover {
+    border: 1px solid $color_grey_light;
+  }
+
+  &:active {
+    border: 1px solid $color_grey;
+  }
+
+}

@@ -5,6 +5,7 @@
     APP.Views.MapInfoDetailsView = Backbone.View.extend({
         events: {
             'click i.icon_button.icon-zoom': 'selectZoom',
+            'click i.fa_icon_button.icon-zoom': 'selectZoom',
             'click a.inst-download-ds': 'downloadData',
             'click a.agent-control': 'agentControl'
         },
@@ -13,6 +14,7 @@
 
         template: JST['app/scripts/templates/map/map-info-details.ejs'],
         templateInstDetails: JST['app/scripts/templates/map/details-instrument.ejs'],
+        templateDatasetDetails: JST['app/scripts/templates/map/details-dataset.ejs'],
 
         initialize: function () {
             APP.bindAll(this);
@@ -39,56 +41,82 @@
                 url: APP.svc_url("scion_management", "get_asset_data"),
                 data: APP.svc_args({
                     asset_id: item.id,
-                    data_filter: {max_rows: 5000}
+                    data_filter: {max_rows: 5000, get_info: true}
                 }),
                 success: function (response) {
                     var result = response.result;
                     self.updateChart(item, result);
+                    self.updateDataset(item, result);
                 }
             });
         },
         updateChart: function (item, result) {
-            var seriesData = [];
+            var varNames = _.keys(result.data).sort(),
+                seriesData = [],
+                yAxisDef,
+                graphStyle = result.schema.attributes.graph ? (result.schema.attributes.graph.style || "") : "",
+                chartsObj = {
+                    chart: {
+                        type: 'line',
+                        zoomType: 'x'
+                    },
+                    title: { text: null },
+                    xAxis: {
+                        type: 'datetime',
+                        title: {text: null},    // "Time"
+                        tickPixelInterval: 120,
+                        dateTimeLabelFormats: {
+                            millisecond: '%H:%M:%S.%L<br>%e-%b-%y',
+                            second: '%H:%M:%S<br>%e-%b-%y',
+                            minute: '%H:%M:%S<br>%e-%b-%y',
+                            hour: '%H:%M<br>%e-%b-%y',
+                            day: '%e-%b-%Y',
+                            week: '%e-%b-%Y',
+                            month: '%b-%Y',
+                            year: '%Y'
+                        }
+                    },
+                    exporting: { enabled: false },
+                    credits: false
+                };
 
-            _.forEach(result.data, function(obj, name) {
-                seriesData.push({name: name, data: obj});
-            });
-            $("#map-details-chart").highcharts({
-                chart: {
-                    type: 'line',
-                    zoomType: 'x'
-                },
-                title: {
-                    text: null
-                },
-                xAxis: {
-                    type: 'datetime',
-                    title: {text: "Time"},
-                    tickPixelInterval: 120,
-                    dateTimeLabelFormats: {
-                        millisecond: '%H:%M:%S.%L<br>%e-%b-%Y',
-                        second: '%H:%M:%S<br>%e-%b-%Y',
-                        minute: '%H:%M:%S<br>%e-%b-%Y',
-                        hour: '%H:%M<br>%e-%b-%Y',
-                        day: '%e-%b-%Y',
-                        week: '%e-%b-%Y',
-                        month: '%b-%Y',
-                        year: '%Y'
-                    }
+            if (graphStyle === "seismic") {
+                yAxisDef = [];
+                //_.forEach(result.data, function(obj, name) {
+                _.forEach(varNames, function(name) {
+                    var obj = result.data[name];
+                    seriesData.push({name: name, type: 'line', data: obj, yAxis: yAxisDef.length});
+                    yAxisDef.push({
+                        labels: {
+                            align: 'left',
+                            x: 0
+                        },
+                        title: { text: name },
+                        offset: 0,
+                        height: '25%',
+                        top: '' + (yAxisDef.length * 33) + '%' });
+                });
+                _.extend(chartsObj, { legend: { enabled: false } } );
+                // console.log("SEISMIC", seriesData, yAxisDef);
+            } else {
+                _.forEach(result.data, function(obj, name) {
+                    seriesData.push({name: name, data: obj});
+                });
+                yAxisDef = { title: null };
+                // console.log("DEFAULT", seriesData, yAxisDef);
+            }
 
-                },
-                yAxis: {
-                    title: null,
-                },
-                exporting: {
-                    enabled: true
-                },
-                credits: false,
-                series: seriesData
-            });
+            _.extend(chartsObj, { yAxis: yAxisDef, series: seriesData} );
+
+            //$("#map-details-chart").highcharts('StockChart', chartsObj);
+            $("#map-details-chart").highcharts(chartsObj);
+
             var chart = $("#map-details-chart").highcharts();
             APP.chart = chart;
             this.chart = chart;
+        },
+        updateDataset: function (item, ds_info) {
+            $("#map-details-dataset").html(this.templateDatasetDetails(ds_info));
         },
         selectZoom: function () {
             var graphModel = new Backbone.Model({instrumentId: this.currentItem.id, instrument: this.currentItem}),
