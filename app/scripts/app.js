@@ -15,7 +15,8 @@
         // Constants
         Constants: {},
         // Library
-        MapAPI: {}
+        MapAPI: {},
+        GraphLib: {}
     };
 
     APP.init =  function () {

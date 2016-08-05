@@ -57,6 +57,14 @@ APP.Views = APP.Views || {};
             this.$el.modal("show");
         },
 
+        showModalStatic: function() {
+            this.$el.modal({
+                show: true,
+                backdrop: 'static',
+                keyboard: false
+            });
+        },
+
         /**
          * Show modal message alerts.
          * Alert has to exist in modal template and has to be hide

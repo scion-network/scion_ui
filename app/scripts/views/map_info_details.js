@@ -54,7 +54,7 @@
             var varNames = _.keys(result.data).sort(),
                 seriesData = [],
                 yAxisDef,
-                graphStyle = result.schema.attributes.graph ? (result.schema.attributes.graph.style || "") : "",
+                graphStyle = APP.GraphLib.getGraphStyle(result.schema),
                 chartsObj = {
                     chart: {
                         type: 'line',
@@ -65,16 +65,7 @@
                         type: 'datetime',
                         title: {text: null},    // "Time"
                         tickPixelInterval: 120,
-                        dateTimeLabelFormats: {
-                            millisecond: '%H:%M:%S.%L<br>%e-%b-%y',
-                            second: '%H:%M:%S<br>%e-%b-%y',
-                            minute: '%H:%M:%S<br>%e-%b-%y',
-                            hour: '%H:%M<br>%e-%b-%y',
-                            day: '%e-%b-%Y',
-                            week: '%e-%b-%Y',
-                            month: '%b-%Y',
-                            year: '%Y'
-                        }
+                        dateTimeLabelFormats: APP.GraphLib.datetimeFormats()
                     },
                     exporting: { enabled: false },
                     credits: false
@@ -122,7 +113,7 @@
             var graphModel = new Backbone.Model({instrumentId: this.currentItem.id, instrument: this.currentItem}),
                 graphView = new APP.Views.ModalGraphView({model: graphModel});
             graphView.render();
-            graphView.showModal();
+            graphView.showModalStatic();
         },
         downloadData: function (evt) {
             evt.preventDefault();

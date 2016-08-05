@@ -48,7 +48,8 @@
                 url: APP.svc_url("scion_management", "get_asset_data"),
                 data: APP.svc_args({
                     asset_id: this.model.get("instrumentId"),
-                    data_filter: {max_rows: 10000, decimate: !!decCheck, start_time: startTime}
+                    data_filter: {max_rows: 10000, start_time: startTime, get_info: true,
+                        decimate: !!decCheck, decimate_method: "mean"}
                 }),
                 success: function (response) {
                     var result = response.result;
@@ -57,47 +58,138 @@
             });
         },
         updateChart: function (result) {
-            var seriesData = [];
+            var self = this,
+                graphStyle = APP.GraphLib.getGraphStyle(result.schema),
+                decCheck = this.$("#modal-graph-chart-check-decimate")[0].checked;
 
-            _.forEach(result.data, function(obj, name) {
-                seriesData.push({name: name, data: obj});
-            });
-            this.$("#modal-graph-chart").highcharts({
-                chart: {
-                    type: 'line',
-                    width: 800,
-                    zoomType: 'x'
-                },
-                title: {
-                    text: null
-                },
-                xAxis: {
-                    type: 'datetime',
-                    title: {text: "Time"},
-                    tickPixelInterval: 120,
-                    dateTimeLabelFormats: {
-                        millisecond: '%H:%M:%S.%L<br>%e-%b-%Y',
-                        second: '%H:%M:%S<br>%e-%b-%Y',
-                        minute: '%H:%M:%S<br>%e-%b-%Y',
-                        hour: '%H:%M<br>%e-%b-%Y',
-                        day: '%e-%b-%Y',
-                        week: '%e-%b-%Y',
-                        month: '%b-%Y',
-                        year: '%Y'
-                    }
+            function afterSetExtremesHandler (evt) {
 
-                },
-                yAxis: {
-                    title: null,
-                },
-                exporting: {
-                    enabled: true
-                },
-                credits: false,
-                series: seriesData
-            });
+                var chart = evt.target.chart,
+                    inRange = 0;
+
+                // TODO: Better to check data result for a decimation factor (e.g. there was a dec_factor > 1)
+                if (! decCheck || chart.series[0].xData.length < 5000 || evt.trigger === undefined) return;
+
+                // Count the number of data points in zoomed time range (TODO: Binary search)
+                _.each(chart.series[0].xData, function (item) {
+                    if (evt.min <= item && item <= evt.max) { inRange++; }
+                });
+                //console.log("ZOOM CHART. Visible points", inRange, "of", chart.series[0].xData.length);
+                if (inRange < 800 || chart.series[0].xData[0] > Math.floor(evt.min) || chart.series[0].xData[chart.series[0].xData.length-1] < Math.floor(evt.max)) {
+                    //console.log("Loading data...");
+                    // Reload
+                    chart.showLoading('Loading data from server...');
+                    $.ajax({
+                        type: 'POST',
+                        url: APP.svc_url("scion_management", "get_asset_data"),
+                        data: APP.svc_args({
+                            asset_id: self.model.get("instrumentId"),
+                            data_filter: {max_rows: 10000,
+                                start_time: Math.floor(evt.min), end_time: Math.ceil(evt.max), get_info: true,
+                                decimate: !!decCheck, decimate_method: "mean"}
+                        }),
+                        success: function (response) {
+                            var result = response.result,
+                                dataChanged = false;
+                            _.forEach(result.data, function(obj, name) {
+                                _.forEach(chart.series, function(serobj) {
+                                    if (serobj.name === name && obj.length > 0) {
+                                        serobj.setData(obj, false);
+                                        dataChanged = true;
+                                    }
+                                });
+                            });
+                            chart.hideLoading();
+                            if (dataChanged) {
+                                chart.redraw();
+                            }
+                        }
+                    });
+                }
+            }
+
+            var varNames = _.keys(result.data).sort(),
+                seriesData = [],
+                yAxisDef,
+                chartsObj = {
+                    chart: {
+                        type: 'line',
+                        width: 800,
+                        zoomType: 'x'
+                    },
+                    title: { text: null },
+                    xAxis: {
+                        type: 'datetime',
+                        title: {text: null},    // "Time"
+                        tickPixelInterval: 120,
+                        events: {
+                            afterSetExtremes: _.debounce(afterSetExtremesHandler, 500)
+                        },
+                        dateTimeLabelFormats: APP.GraphLib.datetimeFormats()
+                    },
+                    navigator : {
+                        adaptToUpdatedData: false
+                    },
+                    rangeSelector : {
+                        buttons: [{
+                            type: 'hour',
+                            count: 1,
+                            text: '1h'
+                        }, {
+                            type: 'day',
+                            count: 1,
+                            text: '1d'
+                        }, {
+                            type: 'month',
+                            count: 1,
+                            text: '1m'
+                        }, {
+                            type: 'year',
+                            count: 1,
+                            text: '1y'
+                        }, {
+                            type: 'all',
+                            text: 'All'
+                        }],
+                        inputEnabled: false, // it supports only days
+                        selected : 4 // all
+                    },
+                    exporting: { enabled: true },
+                    credits: false
+                };
+
+            if (graphStyle === "seismic") {
+                yAxisDef = [];
+                //_.forEach(result.data, function(obj, name) {
+                _.forEach(varNames, function(name) {
+                    var obj = result.data[name];
+                    seriesData.push({name: name, type: 'line', data: obj, yAxis: yAxisDef.length});
+                    yAxisDef.push({
+                        labels: {
+                            align: 'right',
+                            x: 0
+                        },
+                        title: { text: name, opposite: false },
+                        offset: 0,
+                        height: '25%',
+                        top: '' + (yAxisDef.length * 33) + '%' });
+                });
+            } else {
+                _.forEach(result.data, function(obj, name) {
+                    seriesData.push({name: name, data: obj});
+                });
+                yAxisDef = { title: null };
+                _.extend(chartsObj, { legend: { enabled: true } } );
+            }
+
+            _.extend(chartsObj, { yAxis: yAxisDef, series: seriesData} );
+
+            $("#modal-graph-chart").highcharts('StockChart', chartsObj);
+
             var chart = this.$("#modal-graph-chart").highcharts();
             this.chart = chart;
+            this.datasetSchema = result.schema;
+            this.datasetInfo = result.info;
         },
         checkRealTime: function (evt) {
             var $check = $(evt.currentTarget),
@@ -115,28 +207,35 @@
             }
         },
         updateRealTime: function ($check) {
-            var lastTime = this.chart.series[0].data[this.chart.series[0].data.length-1].x,
-                doReplace = this.chart.series[0].data.length > 10000,
+            var lastTime = APP.GraphLib.getSeriesLastTime(this.chart),
+                doReplace = this.chart.series[0].xData.length > 10000,
+                decCheck = this.$("#modal-graph-chart-check-decimate")[0].checked,
+                graphStyle = APP.GraphLib.getGraphStyle(this.datasetSchema),
                 self = this;
             $.ajax({
                 type: 'POST',
                 url: APP.svc_url("scion_management", "get_asset_data"),
                 data: APP.svc_args({
                     asset_id: this.model.get("instrumentId"),
-                    data_filter: {start_time: lastTime, start_time_include: false, max_rows: 10000}
+                    data_filter: {start_time: lastTime, start_time_include: false, max_rows: 10000, get_info: true,
+                        decimate: !!decCheck, decimate_method: "minmax"}
                 }),
                 success: function (response) {
-                    var result = response.result;
+                    var result = response.result,
+                        needRedraw = false;
                     _.forEach(result.data, function(obj, name) {
                         if (! obj.length) return;
+                        needRedraw = true;
                         _.forEach(self.chart.series, function(serobj) {
                             if (serobj.name !== name) return;
                             _.forEach(obj, function(val) {
                                 serobj.addPoint(val, false, doReplace);
                             });
-                            self.chart.redraw();
                         });
                     });
+                    if (needRedraw) {
+                        self.chart.redraw();
+                    }
                 }
             });
 
