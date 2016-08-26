@@ -40,7 +40,9 @@
         APP.setupAjaxToken();
 
         // Get user session - sync call
-        APP.MODEL.SESSION.fetch().done(function () {
+        APP.MODEL.SESSION.fetch().fail(function () {
+            localStorage.removeItem("access_token");
+        }).always(function () {
             // Root view, instantiating all other nested views
             APP.VIEW.ROOT = new APP.Views.RootView().render();
 
